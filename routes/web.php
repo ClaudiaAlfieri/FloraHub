@@ -12,7 +12,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 if (app()->isLocal()) {
     Route::prefix('dev')->name('dev.')->group(function () {
         Route::view('tailwind', 'dev.tailwind')->name('tailwind');
+        Route::view('components', 'dev.components')->name('components');
     });
+
 }
 
 require __DIR__.'/settings.php';
