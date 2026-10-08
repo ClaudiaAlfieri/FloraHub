@@ -1,0 +1,38 @@
+services:
+
+    mysql:
+        image: mysql:8.4
+        container_name: florahub-mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: florahub
+            MYSQL_USER: florahub
+            MYSQL_PASSWORD: florahub
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "3307:3306"
+        volumes:
+            - florahub-mysql-data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+
+    redis:
+        image: redis:8-alpine
+        container_name: florahub-redis
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        volumes:
+            - florahub-redis-data:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+
+volumes:
+    florahub-mysql-data:
+    florahub-redis-data:
