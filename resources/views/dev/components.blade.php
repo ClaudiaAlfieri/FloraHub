@@ -38,6 +38,38 @@
             </div>
         </section>
 
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold text-stone-900">4. x-card</h2>
+
+            <div class="grid gap-6 md:grid-cols-3">
+                <x-card>
+                    Só com o conteúdo por omissão.
+                </x-card>
+
+                <x-card>
+                    <x-slot:header>Rosaceae</x-slot:header>
+                    Família das rosas, macieiras e morangueiros.
+                </x-card>
+
+                <x-card>
+                    <x-slot:header>Rosaceae <x-badge>Ativa</x-badge></x-slot:header>
+                    Cartão completo.
+                    <x-slot:footer>12 espécies registadas</x-slot:footer>
+                </x-card>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold text-stone-900">5. x-button</h2>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <x-button>Guardar</x-button>
+                <x-button variant="secondary">Cancelar</x-button>
+                <x-button variant="danger">Eliminar</x-button>
+                <x-button href="{{ route('dev.tailwind') }}">Ir para Tailwind (link)</x-button>
+                <x-button type="submit" class="w-48 justify-center">type="submit"</x-button>
+            </div>
+        </section>
 
 
     </section>
