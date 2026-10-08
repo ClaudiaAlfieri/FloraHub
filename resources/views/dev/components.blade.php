@@ -71,6 +71,14 @@
             </div>
         </section>
 
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold text-stone-900">6. x-ui.alert</h2>
+
+            <x-ui.alert>Mensagem informativa (tipo por omissão).</x-ui.alert>
+            <x-ui.alert type="success" title="Guardado">A família foi criada com sucesso.</x-ui.alert>
+            <x-ui.alert type="error" title="Erro">Não foi possível guardar. <x-badge color="red">422</x-badge></x-ui.alert>
+        </section>
+
 
     </section>
 
