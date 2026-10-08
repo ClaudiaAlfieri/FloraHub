@@ -8,4 +8,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 });
 
+// Páginas de testes (guias 03.1 a 03.4): apenas em desenvolvimento (APP_ENV=local)
+if (app()->isLocal()) {
+    Route::prefix('dev')->name('dev.')->group(function () {
+        Route::view('tailwind', 'dev.tailwind')->name('tailwind');
+    });
+}
+
 require __DIR__.'/settings.php';

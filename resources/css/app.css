@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 
+@import 'tailwindcss';
+@source '../views';
+
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
@@ -23,9 +26,22 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
+    --color-brand-50: #f4f7f2;
+    --color-brand-100: #e6ede0;
+    --color-brand-200: #cddcc2;
+    --color-brand-300: #aac29b;
+    --color-brand-400: #82a271;
+    --color-brand-500: #5f8350;
+    --color-brand-600: #4a6b3d;
+    --color-brand-700: #3c5632;
+    --color-brand-800: #32462b;
+    --color-brand-900: #2b3b25;
+    --color-brand-950: #16200f;
+
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
+    --color-accent-foreground: var(--color-white)
+
 }
 
 @layer theme {
