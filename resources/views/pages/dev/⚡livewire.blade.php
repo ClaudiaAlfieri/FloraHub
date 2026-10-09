@@ -53,6 +53,15 @@ new #[Layout('layouts::dev')] #[Title('Livewire')] class extends Component {
         $this->reset('suggestion', 'email');
     }
 
+    public int $likes = 0;
+
+    #[On('species-liked')]
+    public function onLiked(string $species, bool $liked): void
+    {
+        $this->likes += $liked ? 1 : -1;
+    }
+
+
 };
 
 ?>
@@ -84,12 +93,17 @@ new #[Layout('layouts::dev')] #[Title('Livewire')] class extends Component {
 
             <ul class="divide-y divide-stone-200 rounded-lg border border-stone-200 bg-white text-sm">
                 @forelse ($this->results as $name)
-                    <li class="px-4 py-2 italic">{{ $name }}</li>
+                    <li class="flex items-center justify-between px-4 py-2" wire:key="{{ $name }}">
+                        <span class="italic">{{ $name }}</span>
+                        <livewire:species-like :species="$name" :key="$name" />
+                    </li>
                 @empty
                     <li class="px-4 py-2 text-stone-500">Sem resultados.</li>
                 @endforelse
             </ul>
+
         </div>
+        <p class="text-sm text-stone-600">Total de "gostos": <strong class="text-brand-700">{{ $likes }}</strong></p>
     </section>
 
     <section class="space-y-4">
