@@ -1,16 +1,33 @@
 <?php
 
+use App\Http\Controllers\Dev\QuickLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
 
-// Páginas de demonstração dos templates (conteúdo estático, ainda sem autenticação)
-Route::view('user/dashboard', 'user.dashboard')->name('user.dashboard');
-Route::view('admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
+    Route::view('dashboard', 'user.dashboard')->name('dashboard');
 });
+
+Route::middleware(['auth', 'verified', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        // Rotas do admin
+        Route::view('dashboard', 'admin.dashboard')->name('dashboard');
+
+        Route::livewire('families', 'pages::admin.families')->name('families.index');
+    });
+
+// Início de sessão rápido: apenas em desenvolvimento (APP_ENV=local)
+Route::post('dev/login/{role}', QuickLoginController::class)
+    ->middleware('guest')
+    ->whereIn('role', ['admin', 'user'])
+    ->name('dev.login');
+
+// Route::middleware(['auth', 'verified'])->group(function () {
+//    Route::view('dashboard', 'dashboard')->name('dashboard');
+// });
 
 // Páginas de testes (guias 03.1 a 03.4): apenas em desenvolvimento (APP_ENV=local)
 if (app()->isLocal()) {
