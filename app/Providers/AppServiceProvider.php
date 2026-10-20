@@ -24,7 +24,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureLivewire();
     }
+
 
     /**
      * Configure default behaviors for production-ready applications.
@@ -47,4 +49,15 @@ class AppServiceProvider extends ServiceProvider
             : null,
         );
     }
+
+    /**
+     * Re-apply the role middleware to every Livewire request made from a protected page.
+     */
+    protected function configureLivewire(): void
+    {
+        Livewire::addPersistentMiddleware([
+            RoleMiddleware::class,
+        ]);
+    }
+
 }
