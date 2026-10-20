@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
         $this->configureLivewire();
     }
 
-
     /**
      * Configure default behaviors for production-ready applications.
      */
@@ -46,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 ->numbers()
                 ->symbols()
                 ->uncompromised()
-            : null,
+            : null
         );
     }
 
@@ -59,5 +60,4 @@ class AppServiceProvider extends ServiceProvider
             RoleMiddleware::class,
         ]);
     }
-
 }

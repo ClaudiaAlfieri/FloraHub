@@ -10,6 +10,7 @@ use Livewire\WithPagination;
 use Flux\Flux;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
 
 new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
 {
@@ -41,8 +42,25 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
     }
 
     /**
+     * Ask for confirmation before permanently deleting a soft deleted family.
+     */
+    public function confirmForceDelete(int $id): void
+    {
+        $family = Family::onlyTrashed()->findOrFail($id);
+
+        $this->dispatch('confirm-action',
+            heading: 'Eliminar definitivamente',
+            message: "A família «{$family->name}» será eliminada definitivamente. Esta operação não pode ser desfeita.",
+            confirmEvent: 'family-force-delete-confirmed',
+            params: ['id' => $family->id],
+            confirmLabel: 'Eliminar',
+        );
+    }
+
+    /**
      * Permanently delete a soft deleted family.
      */
+    #[On('family-force-delete-confirmed')]
     public function forceDelete(int $id): void
     {
         Family::onlyTrashed()->findOrFail($id)->forceDelete();
@@ -225,7 +243,7 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
                                     @if ($family->trashed())
                                         {{-- Próxima tarefa: pedir confirmação num modal antes de eliminar definitivamente --}}
                                         <flux:button size="sm" icon="arrow-uturn-left" wire:click="restore({{ $family->id }})">Restaurar</flux:button>
-                                        <flux:button size="sm" variant="danger" icon="trash" wire:click="forceDelete({{ $family->id }})">Eliminar definitivamente</flux:button>
+                                        <flux:button size="sm" variant="danger" icon="trash"  wire:click="confirmForceDelete({{ $family->id }})">Eliminar definitivamente</flux:button>
                                     @else
                                         <flux:button size="sm" icon="pencil-square" wire:click="edit({{ $family->id }})">Editar</flux:button>
                                         <flux:button size="sm" variant="ghost" icon="trash" wire:click="delete({{ $family->id }})">Remover</flux:button>
