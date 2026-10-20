@@ -43,8 +43,9 @@
 @layer theme {
     .dark {
         --color-accent: var(--color-brand-500);
-        --color-accent-content: var(--color-brand-400);
-        --color-accent-foreground: var(--color-white);
+        --color-accent-content: var(--color-brand-300);
+        --color-accent-foreground: var(--color-brand-950);
+
     }
 }
 
@@ -76,3 +77,4 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
