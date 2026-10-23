@@ -16,7 +16,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         // Rotas do admin
         Route::view('dashboard', 'admin.dashboard')->name('dashboard');
 
-        Route::livewire('families', 'pages::admin.families')->name('families.index');
+        Route::livewire('families', 'pages::admin.families')
+            ->can('viewAny', Family::class)
+            ->name('families.index');
+
     });
 
 // Início de sessão rápido: apenas em desenvolvimento (APP_ENV=local)
