@@ -1,4 +1,4 @@
-<x-layouts::auth :title="__('Two-factor authentication')">
+<x-layouts::auth title="Autenticação de dois fatores">
     <div class="flex flex-col gap-6">
         <div
             class="relative w-full h-auto"
@@ -31,15 +31,15 @@
         >
             <div x-show="!showRecoveryInput">
                 <x-auth-header
-                    :title="__('Authentication code')"
-                    :description="__('Enter the authentication code provided by your authenticator application.')"
+                    title="Código de autenticação"
+                    description="Introduza o código indicado pela sua aplicação de autenticação."
                 />
             </div>
 
             <div x-show="showRecoveryInput">
                 <x-auth-header
-                    :title="__('Recovery code')"
-                    :description="__('Please confirm access to your account by entering one of your emergency recovery codes.')"
+                    title="Código de recuperação"
+                    description="Confirme o acesso à sua conta introduzindo um dos seus códigos de recuperação."
                 />
             </div>
 
@@ -56,7 +56,7 @@
                                 label="OTP Code"
                                 label:sr-only
                                 class="mx-auto"
-                             />
+                            />
                         </div>
                     </div>
 
@@ -73,9 +73,9 @@
                         </div>
 
                         @error('recovery_code')
-                            <flux:text color="red">
-                                {{ $message }}
-                            </flux:text>
+                        <flux:text color="red">
+                            {{ $message }}
+                        </flux:text>
                         @enderror
                     </div>
 
@@ -84,15 +84,15 @@
                         type="submit"
                         class="w-full"
                     >
-                        {{ __('Continue') }}
+                        Continuar
                     </flux:button>
                 </div>
 
                 <div class="mt-5 space-x-0.5 text-sm leading-5 text-center">
-                    <span class="opacity-50">{{ __('or you can') }}</span>
+                    <span class="opacity-50">ou pode</span>
                     <div class="inline font-medium underline cursor-pointer opacity-80">
-                        <span x-show="!showRecoveryInput" @click="toggleInput()">{{ __('login using a recovery code') }}</span>
-                        <span x-show="showRecoveryInput" @click="toggleInput()">{{ __('login using an authentication code') }}</span>
+                        <span x-show="!showRecoveryInput" @click="toggleInput()">entrar com um código de recuperação</span>
+                        <span x-show="showRecoveryInput" @click="toggleInput()">entrar com um código de autenticação</span>
                     </div>
                 </div>
             </form>

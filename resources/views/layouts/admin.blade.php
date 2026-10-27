@@ -1,5 +1,5 @@
 @props([
-    'title' => null,
+    'title' => 'Painel',
 ])
 
 <x-layouts::dashboard :title="$title" subtitle="Administração" :dark="true">
@@ -90,5 +90,7 @@
     </x-slot:actions>
 
     {{ $slot }}
+
     <livewire:confirm-modal />
+
 </x-layouts::dashboard>

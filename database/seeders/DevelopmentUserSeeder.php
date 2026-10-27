@@ -19,13 +19,11 @@ class DevelopmentUserSeeder extends Seeder
         $admin->markEmailAsVerified();
         $admin->syncRoles('admin');
 
-        // Exercício: criar o utilizador user@florahub.test
-        $user=User::firstOrCreate(
-            ['email'=>'user@florahub.test'],
-            ['name'=>'Sofia Almeida','password'=>'password']
+        $user = User::firstOrCreate(
+            ['email' => 'user@florahub.test'],
+            ['name' => 'Sofia Almeida', 'password' => 'password'],
         );
         $user->markEmailAsVerified();
         $user->syncRoles('user');
-
     }
 }
