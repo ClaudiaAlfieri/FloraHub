@@ -1,11 +1,11 @@
 @props([
-    'title' => 'Painel',
+    'title' => null,
     'subtitle' => null,
     'dark' => false,
 ])
 
     <!DOCTYPE html>
-<html lang="pt">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('partials.head')
 
@@ -21,18 +21,18 @@
 
     <!-- Barra lateral (desktop) -->
     <aside @class([
-                'hidden w-64 flex-none flex-col lg:flex',
-                'border-r border-stone-200 bg-white' => ! $dark,
-                'bg-stone-900' => $dark,
-            ])>
+        'hidden w-64 flex-none flex-col lg:flex',
+        'border-r border-stone-200 bg-white' => ! $dark,
+        'bg-stone-900' => $dark,
+    ])>
         <div @class([
-                    'flex h-16 items-center gap-2 border-b px-6',
-                    'border-stone-200' => ! $dark,
-                    'border-stone-800' => $dark,
-                ])>
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
-                        <x-app-logo-icon class="h-5 w-5" />
-                    </span>
+            'flex h-16 items-center gap-2 border-b px-6',
+            'border-stone-200' => ! $dark,
+            'border-stone-800' => $dark,
+        ])>
+            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+                <x-app-logo-icon class="h-5 w-5" />
+            </span>
             <span @class(['text-lg font-semibold tracking-tight', 'text-stone-900' => ! $dark, 'text-white' => $dark])>FloraHub</span>
             {{ $brandBadge ?? '' }}
         </div>
@@ -55,10 +55,10 @@
                     <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"/></svg>
                 </summary>
                 <div @class([
-                            'absolute inset-x-0 top-16 z-20 border-b border-stone-200 px-4 py-4 shadow-lg',
-                            'bg-white' => ! $dark,
-                            'bg-stone-900' => $dark,
-                        ])>
+                    'absolute inset-x-0 top-16 z-20 border-b border-stone-200 px-4 py-4 shadow-lg',
+                    'bg-white' => ! $dark,
+                    'bg-stone-900' => $dark,
+                ])>
                     <nav class="flex flex-col gap-1">
                         {{ $navigation }}
                     </nav>
@@ -69,10 +69,12 @@
                 @if ($subtitle)
                     <p class="text-xs text-stone-400">{{ $subtitle }}</p>
                 @endif
-                <h1 class="text-base font-semibold text-stone-900">{{ $title }}</h1>
+                <h1 class="text-base font-semibold text-stone-900">{{ $title ?? __('Dashboard') }}</h1>
             </div>
 
-            <div class="ml-auto flex items-center gap-2">
+            <div class="ml-auto flex items-center gap-3">
+                <x-locale-switcher :dark="false" />
+
                 {{ $actions }}
             </div>
         </header>

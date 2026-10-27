@@ -1,6 +1,6 @@
-<x-layouts::auth title="Repor palavra-passe">
+<x-layouts::auth :title="__('Reset password')">
     <div class="flex flex-col gap-6">
-        <x-auth-header title="Repor palavra-passe" description="Indique a sua nova palavra-passe." />
+        <x-auth-header :title="__('Reset password')" :description="__('Enter your new password.')" />
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
@@ -14,7 +14,7 @@
             <flux:input
                 name="email"
                 value="{{ request('email') }}"
-                label="Email"
+                label="{{ __('Email') }}"
                 type="email"
                 required
                 autocomplete="email"
@@ -23,7 +23,7 @@
             <!-- Password -->
             <flux:input
                 name="password"
-                label="Palavra-passe"
+                label="{{ __('Password') }}"
                 type="password"
                 required
                 autocomplete="new-password"
@@ -35,7 +35,7 @@
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"
-                label="Confirmar palavra-passe"
+                label="{{ __('Confirm password') }}"
                 type="password"
                 required
                 autocomplete="new-password"
@@ -46,7 +46,7 @@
 
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
-                    Repor palavra-passe
+                    {{ __('Reset password') }}
                 </flux:button>
             </div>
         </form>

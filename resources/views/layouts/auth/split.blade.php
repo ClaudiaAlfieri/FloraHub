@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('partials.head')
 
@@ -16,31 +16,35 @@
     <!-- Painel decorativo -->
     <div class="relative hidden flex-col justify-between overflow-hidden bg-brand-800 p-12 text-brand-50 lg:flex">
         <a href="{{ route('home') }}" class="relative flex items-center gap-2">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-inset ring-white/20">
-                        <x-app-logo-icon class="h-5 w-5" />
-                    </span>
+            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-inset ring-white/20">
+                <x-app-logo-icon class="h-5 w-5" />
+            </span>
             <span class="text-lg font-semibold tracking-tight text-white">FloraHub</span>
         </a>
 
         <div class="relative max-w-sm">
             <p class="text-2xl font-medium leading-relaxed text-white">
-                "Acompanhe todas as suas plantas e nunca se esqueça de quando precisaram de água pela última vez."
+                "{{ __('Keep track of all your plants and never forget when they last needed water.') }}"
             </p>
-            <p class="mt-4 text-sm text-brand-200">O seu companheiro botânico pessoal.</p>
+            <p class="mt-4 text-sm text-brand-200">{{ __('Your personal botanical companion.') }}</p>
         </div>
 
-        <p class="relative text-xs text-brand-300">© {{ date('Y') }} FloraHub — projeto educativo.</p>
+        <p class="relative text-xs text-brand-300">© {{ __(':year FloraHub — educational project.', ['year' => date('Y')]) }}</p>
     </div>
 
     <!-- Painel do formulário -->
     <div class="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
         <div class="mx-auto w-full max-w-sm">
-            <a href="{{ route('home') }}" class="mb-10 flex items-center gap-2 lg:hidden">
-                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
-                            <x-app-logo-icon class="h-5 w-5" />
-                        </span>
-                <span class="text-lg font-semibold tracking-tight text-stone-900">FloraHub</span>
-            </a>
+            <div class="mb-10 flex items-center justify-between">
+                <a href="{{ route('home') }}" class="flex items-center gap-2 lg:hidden">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+                        <x-app-logo-icon class="h-5 w-5" />
+                    </span>
+                    <span class="text-lg font-semibold tracking-tight text-stone-900">FloraHub</span>
+                </a>
+
+                <x-locale-switcher class="ml-auto" />
+            </div>
 
             {{ $slot }}
         </div>

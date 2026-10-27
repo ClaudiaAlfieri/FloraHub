@@ -23,13 +23,13 @@ new class extends Component {
      * @param  array<string, mixed>  $params
      */
     #[On('confirm-action')]
-    public function open(string $heading, string $message, string $confirmEvent, array $params = [], string $confirmLabel = 'Confirmar'): void
+    public function open(string $heading, string $message, string $confirmEvent, array $params = [], ?string $confirmLabel = null): void
     {
         $this->heading = $heading;
         $this->message = $message;
         $this->confirmEvent = $confirmEvent;
         $this->params = $params;
-        $this->confirmLabel = $confirmLabel;
+        $this->confirmLabel = $confirmLabel ?? __('Confirm');
 
         Flux::modal('confirm-action')->show();
     }
@@ -58,7 +58,7 @@ new class extends Component {
 
             <div class="flex justify-end gap-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">Cancelar</flux:button>
+                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
                 </flux:modal.close>
 
                 <flux:button variant="danger" wire:click="confirm">{{ $confirmLabel }}</flux:button>

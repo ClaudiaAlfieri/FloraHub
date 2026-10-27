@@ -1,6 +1,6 @@
-<x-layouts::auth title="Recuperar palavra-passe">
+<x-layouts::auth :title="__('Recover password')">
     <div class="flex flex-col gap-6">
-        <x-auth-header title="Recuperar palavra-passe" description="Indique o seu email para receber uma ligação de reposição da palavra-passe." />
+        <x-auth-header :title="__('Recover password')" :description="__('Enter your email to receive a password reset link.')" />
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
@@ -11,21 +11,21 @@
             <!-- Email Address -->
             <flux:input
                 name="email"
-                label="Email"
+                label="{{ __('Email') }}"
                 type="email"
                 required
                 autofocus
-                placeholder="voce@exemplo.com"
+                placeholder="you@example.com"
             />
 
             <flux:button variant="primary" type="submit" class="w-full" data-test="email-password-reset-link-button">
-                Enviar ligação de reposição
+                {{ __('Send reset link') }}
             </flux:button>
         </form>
 
         <p class="text-center text-sm text-stone-500">
-            Ou regressar ao
-            <a href="{{ route('login') }}" class="font-medium text-brand-700 hover:text-brand-800">início de sessão</a>
+            {{ __('Or return to') }}
+            <a href="{{ route('login') }}" class="font-medium text-brand-700 hover:text-brand-800">{{ __('log in') }}</a>
         </p>
     </div>
 </x-layouts::auth>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('partials.head')
 </head>
@@ -16,13 +16,14 @@
         </a>
 
         <nav class="hidden items-center gap-8 md:flex">
-            <a href="{{ route('home') }}" class="text-sm font-medium text-brand-700">Início</a>
-            <a href="#" class="text-sm font-medium text-stone-600 hover:text-brand-700">Espécies</a>
+            <a href="{{ route('home') }}" class="text-sm font-medium text-brand-700">{{ __('Home') }}</a>
+            <a href="#" class="text-sm font-medium text-stone-600 hover:text-brand-700">{{ __('Species') }}</a>
         </nav>
 
-        <div class="hidden items-center gap-3 md:flex">
-            <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100">Iniciar sessão</a>
-            <a href="{{ route('register') }}" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">Criar conta</a>
+        <div class="hidden items-center gap-4 md:flex">
+            <x-locale-switcher />
+            <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100">{{ __('Log in') }}</a>
+            <a href="{{ route('register') }}" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">{{ __('Create account') }}</a>
         </div>
 
         <details class="md:hidden">
@@ -31,11 +32,11 @@
             </summary>
             <div class="absolute inset-x-0 top-16 border-b border-stone-200 bg-white px-4 py-4 shadow-lg">
                 <div class="flex flex-col gap-1">
-                    <a href="{{ route('home') }}" class="rounded-lg bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700">Início</a>
-                    <a href="#" class="rounded-lg px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50">Espécies</a>
+                    <a href="{{ route('home') }}" class="rounded-lg bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700">{{ __('Home') }}</a>
+                    <a href="#" class="rounded-lg px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50">{{ __('Species') }}</a>
                     <div class="my-2 border-t border-stone-200"></div>
-                    <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50">Iniciar sessão</a>
-                    <a href="{{ route('register') }}" class="rounded-lg bg-brand-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-brand-700">Criar conta</a>
+                    <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50">{{ __('Log in') }}</a>
+                    <a href="{{ route('register') }}" class="rounded-lg bg-brand-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-brand-700">{{ __('Create account') }}</a>
                 </div>
             </div>
         </details>
@@ -58,25 +59,25 @@
                             </span>
                     <span class="text-base font-semibold text-stone-900">FloraHub</span>
                 </div>
-                <p class="mt-4 max-w-sm text-sm text-stone-500">Um catálogo botânico e um companheiro pessoal de cuidado de plantas, criado para ajudar a conhecer espécies e manter a sua própria coleção saudável.</p>
+                <p class="mt-4 max-w-sm text-sm text-stone-500">{{ __('A botanical catalogue and a personal plant care companion, built to help you get to know species and keep your own collection healthy.') }}</p>
             </div>
             <div>
-                <h3 class="text-sm font-semibold text-stone-900">Explorar</h3>
+                <h3 class="text-sm font-semibold text-stone-900">{{ __('Explore') }}</h3>
                 <ul class="mt-4 space-y-2.5 text-sm text-stone-500">
-                    <li><a href="{{ route('home') }}" class="hover:text-brand-700">Início</a></li>
-                    <li><a href="#" class="hover:text-brand-700">Catálogo de espécies</a></li>
+                    <li><a href="{{ route('home') }}" class="hover:text-brand-700">{{ __('Home') }}</a></li>
+                    <li><a href="#" class="hover:text-brand-700">{{ __('Species catalogue') }}</a></li>
                 </ul>
             </div>
             <div>
-                <h3 class="text-sm font-semibold text-stone-900">Conta</h3>
+                <h3 class="text-sm font-semibold text-stone-900">{{ __('Account') }}</h3>
                 <ul class="mt-4 space-y-2.5 text-sm text-stone-500">
-                    <li><a href="{{ route('login') }}" class="hover:text-brand-700">Iniciar sessão</a></li>
-                    <li><a href="{{ route('register') }}" class="hover:text-brand-700">Criar conta</a></li>
+                    <li><a href="{{ route('login') }}" class="hover:text-brand-700">{{ __('Log in') }}</a></li>
+                    <li><a href="{{ route('register') }}" class="hover:text-brand-700">{{ __('Create account') }}</a></li>
                 </ul>
             </div>
         </div>
         <div class="mt-10 border-t border-stone-200 pt-6 text-xs text-stone-400">
-            © {{ date('Y') }} FloraHub — projeto educativo.
+            © {{ __(':year FloraHub — educational project.', ['year' => date('Y')]) }}
         </div>
     </div>
 </footer>

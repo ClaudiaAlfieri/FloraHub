@@ -1,10 +1,21 @@
 <?php
 
 use App\Http\Controllers\Dev\QuickLoginController;
+use App\Http\Middleware\SetLocale;
 use App\Models\Family;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
+
+// Alternar o idioma da aplicação, guardado na sessão.
+Route::get('locale/{locale}', function (Request $request, string $locale) {
+    if (in_array($locale, SetLocale::SUPPORTED_LOCALES, true)) {
+        $request->session()->put('locale', $locale);
+    }
+
+    return back();
+})->whereIn('locale', SetLocale::SUPPORTED_LOCALES)->name('locale.update');
 
 // Início de sessão rápido: apenas em desenvolvimento (APP_ENV=local)
 Route::post('dev/login/{role}', QuickLoginController::class)

@@ -17,7 +17,7 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
+new #[Layout('layouts::admin')] #[Title('Families')] class extends Component
 {
     use WithFileUploads, WithPagination;
 
@@ -209,11 +209,11 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
         if ($family === null) {
             Family::create($validated);
 
-            Flux::toast(variant: 'success', text: 'Família criada.');
+            Flux::toast(variant: 'success', text: __('Family created.'));
         } else {
             $family->update($validated);
 
-            Flux::toast(variant: 'success', text: 'Família atualizada.');
+            Flux::toast(variant: 'success', text: __('Family updated.'));
         }
 
         if (array_key_exists('image', $validated) && $oldImage !== null) {
@@ -269,7 +269,7 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
 
         $this->closeShow();
 
-        Flux::toast(variant: 'warning', text: 'Família removida.');
+        Flux::toast(variant: 'warning', text: __('Family removed.'));
     }
 
 
@@ -284,7 +284,7 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
 
         $family->restore();
 
-        Flux::toast(variant: 'success', text: 'Família restaurada.');
+        Flux::toast(variant: 'success', text: __('Family restored.'));
     }
 
 
@@ -298,11 +298,11 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
         $this->authorize('forceDelete', $family);
 
         $this->dispatch('confirm-action',
-            heading: 'Eliminar definitivamente',
-            message: "A família «{$family->name}» será eliminada definitivamente. Esta operação não pode ser desfeita.",
+            heading: __('Delete permanently'),
+            message: __('The «:name» family will be permanently deleted. This action cannot be undone.', ['name' => $family->name]),
             confirmEvent: 'family-force-delete-confirmed',
             params: ['id' => $family->id],
-            confirmLabel: 'Eliminar',
+            confirmLabel: __('Delete'),
         );
     }
 
@@ -324,7 +324,7 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
 
         $this->closeShow();
 
-        Flux::toast(variant: 'danger', text: 'Família eliminada definitivamente.');
+        Flux::toast(variant: 'danger', text: __('Family permanently deleted.'));
     }
 
 
@@ -363,12 +363,12 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
 <div>
     <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-            <h2 class="text-2xl font-semibold tracking-tight text-stone-900">Famílias botânicas</h2>
-            <p class="mt-1 text-sm text-stone-500">Gerir as famílias usadas para organizar as espécies do catálogo.</p>
+            <h2 class="text-2xl font-semibold tracking-tight text-stone-900">{{ __('Botanical families') }}</h2>
+            <p class="mt-1 text-sm text-stone-500">{{ __('Manage the families used to organise the species in the catalogue.') }}</p>
         </div>
 
         @can('create', App\Models\Family::class)
-            <flux:button variant="primary" icon="plus" wire:click="create">Nova família</flux:button>
+            <flux:button variant="primary" icon="plus" wire:click="create">{{ __('New family') }}</flux:button>
         @endcan
     </div>
 
@@ -377,24 +377,24 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
             <flux:input
                 wire:model.live.debounce.300ms="search"
                 icon="magnifying-glass"
-                placeholder="Pesquisar por nome ou descrição…"
+                placeholder="{{ __('Search by name or description…') }}"
                 class="max-w-sm"
             />
 
             <flux:select wire:model.live="status" class="max-w-44">
-                <flux:select.option value="all">Todas</flux:select.option>
-                <flux:select.option value="active">Ativas</flux:select.option>
-                <flux:select.option value="trashed">Removidas</flux:select.option>
+                <flux:select.option value="all">{{ __('All') }}</flux:select.option>
+                <flux:select.option value="active">{{ __('Active') }}</flux:select.option>
+                <flux:select.option value="trashed">{{ __('Removed') }}</flux:select.option>
             </flux:select>
         </div>
 
         <div class="px-4 [--flux-bleed:1rem]">
             <flux:table bleed :paginate="$this->families">
                 <flux:table.columns>
-                    <flux:table.column>Família</flux:table.column>
-                    <flux:table.column>Descrição</flux:table.column>
-                    <flux:table.column>Estado</flux:table.column>
-                    <flux:table.column align="end">Ações</flux:table.column>
+                    <flux:table.column>{{ __('Family') }}</flux:table.column>
+                    <flux:table.column>{{ __('Description') }}</flux:table.column>
+                    <flux:table.column>{{ __('Status') }}</flux:table.column>
+                    <flux:table.column align="end">{{ __('Actions') }}</flux:table.column>
                 </flux:table.columns>
 
                 <flux:table.rows>
@@ -433,28 +433,28 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
 
                             <flux:table.cell>
                                 @if ($family->trashed())
-                                    <flux:badge size="sm" color="red">Removida</flux:badge>
+                                    <flux:badge size="sm" color="red">{{ __('Removed') }}</flux:badge>
                                 @else
-                                    <flux:badge size="sm" color="green">Ativa</flux:badge>
+                                    <flux:badge size="sm" color="green">{{ __('Active') }}</flux:badge>
                                 @endif
                             </flux:table.cell>
 
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-2">
                                     @can('restore', $family)
-                                        <flux:button size="sm" icon="arrow-uturn-left" wire:click="restore({{ $family->id }})">Restaurar</flux:button>
+                                        <flux:button size="sm" icon="arrow-uturn-left" wire:click="restore({{ $family->id }})">{{ __('Restore') }}</flux:button>
                                     @endcan
 
                                     @can('forceDelete', $family)
-                                        <flux:button size="sm" variant="danger" icon="trash" wire:click="confirmForceDelete({{ $family->id }})">Eliminar definitivamente</flux:button>
+                                        <flux:button size="sm" variant="danger" icon="trash" wire:click="confirmForceDelete({{ $family->id }})">{{ __('Delete permanently') }}</flux:button>
                                     @endcan
 
                                     @can('update', $family)
-                                        <flux:button size="sm" icon="pencil-square" wire:click="edit({{ $family->id }})">Editar</flux:button>
+                                        <flux:button size="sm" icon="pencil-square" wire:click="edit({{ $family->id }})">{{ __('Edit') }}</flux:button>
                                     @endcan
 
                                     @can('delete', $family)
-                                        <flux:button size="sm" variant="ghost" icon="trash" wire:click="delete({{ $family->id }})">Remover</flux:button>
+                                        <flux:button size="sm" variant="ghost" icon="trash" wire:click="delete({{ $family->id }})">{{ __('Remove') }}</flux:button>
                                     @endcan
                                 </div>
                             </flux:table.cell>
@@ -462,7 +462,7 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
                     @empty
                         <flux:table.row>
                             <flux:table.cell colspan="4" class="py-10 text-center text-stone-500">
-                                Nenhuma família encontrada.
+                                {{ __('No family found.') }}
                             </flux:table.cell>
                         </flux:table.row>
                     @endforelse
@@ -479,7 +479,7 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
                 @else
                     <div class="flex aspect-video flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-stone-300 bg-stone-50 text-stone-400">
                         <flux:icon.photo class="size-10" />
-                        <span class="text-sm">Sem imagem</span>
+                        <span class="text-sm">{{ __('No image') }}</span>
                     </div>
                 @endif
 
@@ -488,31 +488,31 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
                         <flux:heading size="xl">{{ $shownFamily->name }}</flux:heading>
 
                         @if ($shownFamily->trashed())
-                            <flux:badge size="sm" color="red">Removida</flux:badge>
+                            <flux:badge size="sm" color="red">{{ __('Removed') }}</flux:badge>
                         @else
-                            <flux:badge size="sm" color="green">Ativa</flux:badge>
+                            <flux:badge size="sm" color="green">{{ __('Active') }}</flux:badge>
                         @endif
                     </div>
                     <flux:text class="mt-1">{{ $shownFamily->slug }}</flux:text>
                 </div>
 
                 <div>
-                    <flux:heading>Descrição</flux:heading>
-                    <flux:text class="mt-2 whitespace-pre-line">{{ $shownFamily->description ?? 'Sem descrição.' }}</flux:text>
+                    <flux:heading>{{ __('Description') }}</flux:heading>
+                    <flux:text class="mt-2 whitespace-pre-line">{{ $shownFamily->description ?? __('No description.') }}</flux:text>
                 </div>
 
                 <dl class="grid grid-cols-2 gap-4 rounded-xl bg-stone-50 p-4 text-sm">
                     <div>
-                        <dt class="text-stone-500">Criada em</dt>
+                        <dt class="text-stone-500">{{ __('Created at') }}</dt>
                         <dd class="font-medium text-stone-900">{{ $shownFamily->created_at?->format('d/m/Y H:i') }}</dd>
                     </div>
                     <div>
-                        <dt class="text-stone-500">Atualizada em</dt>
+                        <dt class="text-stone-500">{{ __('Updated at') }}</dt>
                         <dd class="font-medium text-stone-900">{{ $shownFamily->updated_at?->format('d/m/Y H:i') }}</dd>
                     </div>
                     @if ($shownFamily->trashed())
                         <div>
-                            <dt class="text-red-600">Removida em</dt>
+                            <dt class="text-red-600">{{ __('Removed at') }}</dt>
                             <dd class="font-medium text-red-700">{{ $shownFamily->deleted_at?->format('d/m/Y H:i') }}</dd>
                         </div>
                     @endif
@@ -520,22 +520,22 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
 
                 <div class="flex flex-wrap justify-end gap-2">
                     @can('restore', $shownFamily)
-                        <flux:button icon="arrow-uturn-left" wire:click="restore({{ $shownFamily->id }})">Restaurar</flux:button>
+                        <flux:button icon="arrow-uturn-left" wire:click="restore({{ $shownFamily->id }})">{{ __('Restore') }}</flux:button>
                     @endcan
 
                     @can('forceDelete', $shownFamily)
-                        <flux:button variant="danger" icon="trash" wire:click="confirmForceDelete({{ $shownFamily->id }})">Eliminar definitivamente</flux:button>
+                        <flux:button variant="danger" icon="trash" wire:click="confirmForceDelete({{ $shownFamily->id }})">{{ __('Delete permanently') }}</flux:button>
                     @endcan
 
                     @can('update', $shownFamily)
-                        <flux:button icon="pencil-square" wire:click="edit({{ $shownFamily->id }})">Editar</flux:button>
+                        <flux:button icon="pencil-square" wire:click="edit({{ $shownFamily->id }})">{{ __('Edit') }}</flux:button>
                     @endcan
 
                     @can('delete', $shownFamily)
-                        <flux:button variant="danger" icon="trash" wire:click="delete({{ $shownFamily->id }})">Remover</flux:button>
+                        <flux:button variant="danger" icon="trash" wire:click="delete({{ $shownFamily->id }})">{{ __('Remove') }}</flux:button>
                     @endcan
 
-                    <flux:button variant="ghost" wire:click="closeShow">Fechar</flux:button>
+                    <flux:button variant="ghost" wire:click="closeShow">{{ __('Close') }}</flux:button>
                 </div>
             </div>
         @endif
@@ -544,35 +544,35 @@ new #[Layout('layouts::admin')] #[Title('Famílias')] class extends Component
     <flux:modal name="family-form" flyout class="md:w-lg">
         <form wire:submit="save" class="space-y-6">
             <div>
-                <flux:heading size="lg">{{ $editingId ? 'Editar família' : 'Nova família' }}</flux:heading>
-                <flux:text class="mt-2">Os campos marcados com * são obrigatórios.</flux:text>
+                <flux:heading size="lg">{{ $editingId ? __('Edit family') : __('New family') }}</flux:heading>
+                <flux:text class="mt-2">{{ __('Fields marked with * are required.') }}</flux:text>
             </div>
 
-            <flux:input wire:model.blur="name" label="Nome *" placeholder="Ex.: Araceae" />
+            <flux:input wire:model.blur="name" label="{{ __('Name *') }}" placeholder="{{ __('E.g.: Araceae') }}" />
 
             <flux:input
                 wire:model="slug"
-                label="Slug *"
-                description="Identificador usado nos endereços. É gerado a partir do nome, mas pode ser alterado."
-                placeholder="Ex.: araceae"
+                label="{{ __('Slug *') }}"
+                description="{{ __('Identifier used in addresses. It is generated from the name, but can be changed.') }}"
+                placeholder="{{ __('E.g.: araceae') }}"
             />
 
-            <flux:textarea wire:model="description" label="Descrição" rows="5" />
+            <flux:textarea wire:model="description" label="{{ __('Description') }}" rows="5" />
 
             <x-image-upload
                 wire:model="image"
                 :file="$image"
                 :current="$currentImageUrl"
                 remove="clearImage"
-                description="JPG, PNG ou WebP, até 2 MB, com pelo menos 800 px de largura."
+                description="{{ __('JPG, PNG or WebP, up to 2 MB, at least 800 px wide.') }}"
             />
 
             <div class="flex justify-end gap-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">Cancelar</flux:button>
+                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
                 </flux:modal.close>
 
-                <flux:button type="submit" variant="primary">Guardar</flux:button>
+                <flux:button type="submit" variant="primary">{{ __('Save') }}</flux:button>
             </div>
         </form>
     </flux:modal>

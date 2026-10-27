@@ -1,5 +1,5 @@
 @props([
-    'label' => 'Imagem',
+    'label' => null,
     'description' => null,
     'file' => null,
     'current' => null,
@@ -14,9 +14,8 @@
     $previewUrl = $file?->isPreviewable() && ! $errors->has($name) ? $file->temporaryUrl() : $current;
 @endphp
 
-
 <flux:field {{ $attributes->whereDoesntStartWith('wire:model') }}>
-    <flux:label>{{ $label }}</flux:label>
+    <flux:label>{{ $label ?? __('Image') }}</flux:label>
 
     <div
         x-data="{ uploading: false, progress: 0 }"
@@ -33,7 +32,7 @@
             @else
                 <div class="flex h-full flex-col items-center justify-center gap-2 text-stone-400">
                     <flux:icon.photo class="size-10" />
-                    <span class="text-sm">Sem imagem</span>
+                    <span class="text-sm">{{ __('No image') }}</span>
                 </div>
             @endif
 
@@ -45,14 +44,13 @@
         <div class="flex flex-wrap items-center gap-2">
             <label class="inline-flex h-8 cursor-pointer items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-800 shadow-xs hover:bg-zinc-50 focus-within:ring-2 focus-within:ring-brand-500">
                 <flux:icon.arrow-up-tray variant="micro" />
-                {{ $previewUrl ? 'Substituir imagem' : 'Escolher imagem' }}
+                {{ $previewUrl ? __('Replace image') : __('Choose image') }}
                 <input type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" {{ $attributes->wire('model') }}>
             </label>
 
             @if ($remove && $previewUrl)
-                <flux:button size="sm" variant="ghost" icon="x-mark" wire:click="{{ $remove }}">Remover imagem</flux:button>
+                <flux:button size="sm" variant="ghost" icon="x-mark" wire:click="{{ $remove }}">{{ __('Remove image') }}</flux:button>
             @endif
-
         </div>
     </div>
 
