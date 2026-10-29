@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dev\QuickLoginController;
 use App\Http\Middleware\SetLocale;
 use App\Models\Family;
+use App\Models\Species;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,9 +36,14 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::get('dashboard', function () {
             return view('admin.dashboard', [
                 'familiesCount' => Family::count(),
+                'speciesCount' => Species::count(),
                 'usersCount' => User::role('user')->count(),
             ]);
         })->name('dashboard');
+
+        Route::livewire('species', 'pages::admin.species')
+            ->can('viewAny', Species::class)
+            ->name('species.index');
 
         Route::livewire('families', 'pages::admin.families')
             ->can('viewAny', Family::class)
