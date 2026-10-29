@@ -56,10 +56,13 @@ class FamilyPolicy
     }
 
     /**
-     * Determine whether the user can permanently delete the family. Only soft deleted families can be permanently deleted.
+     * Determine whether the user can permanently delete the family. Only soft deleted families
+     * without species (including soft deleted species) can be permanently deleted.
      */
     public function forceDelete(User $user, Family $family): bool
     {
-        return $user->hasRole('admin') && $family->trashed();
+        return $user->hasRole('admin')
+            && $family->trashed()
+            && ! $family->species()->withTrashed()->exists();
     }
 }
