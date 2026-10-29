@@ -3,6 +3,7 @@
 use App\Models\Family;
 use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -207,11 +208,15 @@ new #[Layout('layouts::admin')] #[Title('Families')] class extends Component
         $oldImage = $family?->image;
 
         if ($family === null) {
-            Family::create($validated);
+            $created = Family::create($validated);
+
+            Log::channel('audit')->info('Family created', ['family_id' => $created->id]);
 
             Flux::toast(variant: 'success', text: __('Family created.'));
         } else {
             $family->update($validated);
+
+            Log::channel('audit')->info('Family updated', ['family_id' => $family->id]);
 
             Flux::toast(variant: 'success', text: __('Family updated.'));
         }
@@ -267,6 +272,8 @@ new #[Layout('layouts::admin')] #[Title('Families')] class extends Component
 
         $family->delete();
 
+        Log::channel('audit')->info('Family removed', ['family_id' => $family->id]);
+
         $this->closeShow();
 
         Flux::toast(variant: 'warning', text: __('Family removed.'));
@@ -283,6 +290,8 @@ new #[Layout('layouts::admin')] #[Title('Families')] class extends Component
         $this->authorize('restore', $family);
 
         $family->restore();
+
+        Log::channel('audit')->info('Family restored', ['family_id' => $family->id]);
 
         Flux::toast(variant: 'success', text: __('Family restored.'));
     }
@@ -317,6 +326,8 @@ new #[Layout('layouts::admin')] #[Title('Families')] class extends Component
         $this->authorize('forceDelete', $family);
 
         $family->forceDelete();
+
+        Log::channel('audit')->info('Family force deleted', ['family_id' => $family->id]);
 
         if ($family->image !== null) {
             Storage::disk('public')->delete($family->image);
