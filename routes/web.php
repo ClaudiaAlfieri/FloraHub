@@ -3,6 +3,7 @@
 use App\Http\Controllers\Dev\QuickLoginController;
 use App\Http\Middleware\SetLocale;
 use App\Models\Family;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,12 +35,17 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::get('dashboard', function () {
             return view('admin.dashboard', [
                 'familiesCount' => Family::count(),
+                'usersCount' => User::role('user')->count(),
             ]);
         })->name('dashboard');
 
         Route::livewire('families', 'pages::admin.families')
             ->can('viewAny', Family::class)
             ->name('families.index');
+
+        Route::livewire('users', 'pages::admin.users')
+            ->can('viewAny', User::class)
+            ->name('users.index');
     });
 
 // Páginas de testes (guias 03.1 a 03.4): apenas em desenvolvimento (APP_ENV=local)
