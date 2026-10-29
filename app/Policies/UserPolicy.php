@@ -21,4 +21,14 @@ class UserPolicy
     {
         return $user->hasRole('admin');
     }
+
+    /**
+     * Determine whether the user can send a message to another user.
+     *
+     * An administrator cannot send a message to themselves.
+     */
+    public function notify(User $user, User $model): bool
+    {
+        return $user->hasRole('admin') && $user->isNot($model);
+    }
 }

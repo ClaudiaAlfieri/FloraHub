@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('families', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();//char[10] vchar[100]
+            $table->string('name')->unique(); // char[10] vchar[100]
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();

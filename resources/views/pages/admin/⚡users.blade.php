@@ -1,10 +1,13 @@
 <?php
 
 use App\Models\User;
+use App\Notifications\UserMessage;
 use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -19,6 +22,13 @@ new #[Layout('layouts::admin')] #[Title('Users')] class extends Component {
 
     #[Url(as: 'user', except: '')]
     public string $showing = '';
+
+    #[Locked]
+    public ?int $messageUserId = null;
+
+    public string $subject = '';
+
+    public string $body = '';
 
     /**
      * Open the drawer of the user given in the URL (?user=id).
@@ -110,6 +120,46 @@ new #[Layout('layouts::admin')] #[Title('Users')] class extends Component {
         $this->showing = '';
 
         Flux::modal('user-show')->close();
+    }
+
+    /**
+     * Open the modal to send a message to the user.
+     */
+    public function openMessage(int $id): void
+    {
+        $user = User::findOrFail($id);
+
+        $this->authorize('notify', $user);
+
+        $this->resetValidation();
+        $this->messageUserId = $user->id;
+        $this->subject = '';
+        $this->body = '';
+
+        Flux::modal('user-message')->show();
+    }
+
+    /**
+     * Queue the message: it is delivered in the application and by email by a queue worker.
+     */
+    public function sendMessage(): void
+    {
+        $validated = $this->validate([
+            'subject' => ['required', 'string', 'max:120'],
+            'body' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $user = User::findOrFail($this->messageUserId);
+
+        $this->authorize('notify', $user);
+
+        $user->notify(new UserMessage($validated['subject'], $validated['body']));
+
+        Log::channel('audit')->info('User message queued', ['recipient_id' => $user->id]);
+
+        Flux::modal('user-message')->close();
+
+        Flux::toast(variant: 'success', text: __('Message queued.'));
     }
 };
 ?>
@@ -237,10 +287,35 @@ new #[Layout('layouts::admin')] #[Title('Users')] class extends Component {
                     </div>
                 </dl>
 
-                <div class="flex justify-end">
+                <div class="flex flex-wrap justify-end gap-2">
+                    @can('notify', $shownUser)
+                        <flux:button icon="envelope" wire:click="openMessage({{ $shownUser->id }})">{{ __('Send message') }}</flux:button>
+                    @endcan
+
                     <flux:button variant="ghost" wire:click="closeShow">{{ __('Close') }}</flux:button>
                 </div>
             </div>
         @endif
+    </flux:modal>
+
+    <flux:modal name="user-message" class="md:w-lg">
+        <form wire:submit="sendMessage" class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ __('Send message') }}</flux:heading>
+                <flux:text class="mt-2">{{ __('The user receives the message in the application and by email.') }}</flux:text>
+            </div>
+
+            <flux:input wire:model="subject" label="{{ __('Subject *') }}" />
+
+            <flux:textarea wire:model="body" label="{{ __('Message *') }}" rows="6" />
+
+            <div class="flex justify-end gap-2">
+                <flux:modal.close>
+                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                </flux:modal.close>
+
+                <flux:button type="submit" variant="primary" icon="paper-airplane">{{ __('Send') }}</flux:button>
+            </div>
+        </form>
     </flux:modal>
 </div>

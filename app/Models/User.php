@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordQueued;
+use App\Notifications\VerifyEmailQueued;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -55,6 +57,23 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('admin') ? 'admin.dashboard' : 'dashboard';
     }
 
+    /**
+     * Send the email verification notification through the queue.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new VerifyEmailQueued);
+    }
+
+    /**
+     * Send the password reset notification through the queue.
+     *
+     * @param  string  $token
+     */
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
+    {
+        $this->notify(new ResetPasswordQueued($token));
+    }
 
     /**
      * Get the user's initials

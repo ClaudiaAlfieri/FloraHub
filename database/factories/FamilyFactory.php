@@ -27,5 +27,4 @@ class FamilyFactory extends Factory
             'image' => null,
         ];
     }
-
 }

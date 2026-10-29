@@ -2,6 +2,11 @@
     'title' => null,
 ])
 
+@php
+    $latestUnread = auth()->user()->unreadNotifications()->take(3)->get();
+    $unreadCount = auth()->user()->unreadNotifications()->count();
+@endphp
+
 <x-layouts::dashboard :title="$title ?? __('Dashboard')">
 
     <x-slot:navigation>
@@ -22,9 +27,16 @@
             {{ __('Reminders') }}
             <span class="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-100 px-1.5 text-xs font-semibold text-amber-800">3</span>
         </a>
-        <a href="#" class="flex items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2 text-sm font-medium text-stone-600 hover:bg-stone-50">
+        <a href="{{ route('notifications.index') }}" @class([
+            'flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-sm font-medium',
+            'border-brand-600 bg-brand-50 text-brand-800' => request()->routeIs('notifications.*'),
+            'border-transparent text-stone-600 hover:bg-stone-50' => ! request()->routeIs('notifications.*'),
+        ])>
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
             {{ __('Notifications') }}
+            @if ($unreadCount > 0)
+                <span class="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-100 px-1.5 text-xs font-semibold text-brand-800">{{ $unreadCount }}</span>
+            @endif
         </a>
         <a href="#" class="flex items-center gap-3 rounded-lg border-l-2 border-transparent px-3 py-2 text-sm font-medium text-stone-600 hover:bg-stone-50">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
@@ -47,23 +59,24 @@
             <summary class="flex h-9 w-9 list-none items-center justify-center rounded-lg text-stone-600 hover:bg-stone-100 [&::-webkit-details-marker]:hidden">
                 <span class="relative">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-                    <span class="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-red-500"></span>
+                    @if ($unreadCount > 0)
+                        <span class="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">{{ $unreadCount }}</span>
+                    @endif
                 </span>
             </summary>
             <div class="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-stone-200 bg-white p-2 shadow-lg">
                 <p class="px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-stone-400">{{ __('Notifications') }}</p>
-                <a href="#" class="flex items-start gap-3 rounded-lg px-2 py-2 hover:bg-stone-50">
-                    <span class="mt-1 h-2 w-2 flex-none rounded-full bg-brand-600"></span>
-                    <span><span class="block text-sm text-stone-800">{{ __('Reminder: water the Fiddle-leaf fig') }}</span><span class="block text-xs text-stone-500">{{ __('2 hours ago') }}</span></span>
-                </a>
-                <a href="#" class="flex items-start gap-3 rounded-lg px-2 py-2 hover:bg-stone-50">
-                    <span class="mt-1 h-2 w-2 flex-none rounded-full bg-brand-600"></span>
-                    <span><span class="block text-sm text-stone-800">{{ __('Care logged for the Swiss cheese plant') }}</span><span class="block text-xs text-stone-500">{{ __('Yesterday') }}</span></span>
-                </a>
-                <a href="#" class="flex items-start gap-3 rounded-lg px-2 py-2 hover:bg-stone-50">
-                    <span class="mt-1 h-2 w-2 flex-none rounded-full bg-stone-300"></span>
-                    <span><span class="block text-sm text-stone-800">{{ __('Welcome to FloraHub!') }}</span><span class="block text-xs text-stone-500">{{ __(':count days ago', ['count' => 3]) }}</span></span>
-                </a>
+                @forelse ($latestUnread as $notification)
+                    <a href="{{ route('notifications.index') }}" class="flex items-start gap-3 rounded-lg px-2 py-2 hover:bg-stone-50">
+                        <span class="mt-1 h-2 w-2 flex-none rounded-full bg-brand-600"></span>
+                        <span class="min-w-0"><span class="block truncate text-sm text-stone-800">{{ $notification->data['subject'] ?? '' }}</span><span class="block text-xs text-stone-500">{{ $notification->created_at?->diffForHumans() }}</span></span>
+                    </a>
+                @empty
+                    <p class="px-2 py-3 text-sm text-stone-500">{{ __('No notifications') }}</p>
+                @endforelse
+                <div class="mt-1 border-t border-stone-200 pt-1">
+                    <a href="{{ route('notifications.index') }}" class="block rounded-lg px-2 py-2 text-sm font-medium text-brand-700 hover:bg-stone-50">{{ __('See all') }}</a>
+                </div>
             </div>
         </details>
 
