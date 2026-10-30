@@ -72,6 +72,7 @@ return [
     'difficulty' => 'dificuldade',
     'subject' => 'assunto',
     'body' => 'mensagem',
+    'token_name' => 'nome do token',
     'in' => 'O valor selecionado para :attribute é inválido.',
     'in_array' => 'O campo :attribute deve existir em :other.',
     'in_array_keys' => 'O campo :attribute deve conter pelo menos uma das seguintes chaves: :values.',

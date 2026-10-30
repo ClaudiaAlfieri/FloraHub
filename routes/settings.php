@@ -16,4 +16,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'password.confirm',
         ])
         ->name('security.edit');
+
+    // Tokens da API: só utilizadores com o role "user" (Gate manage-api-tokens) e com a password confirmada.
+    Route::livewire('settings/api-tokens', 'pages::settings.api-tokens')
+        ->middleware(['password.confirm'])
+        ->can('manage-api-tokens')
+        ->name('api-tokens.edit');
 });
