@@ -31,4 +31,12 @@ class UserPolicy
     {
         return $user->hasRole('admin') && $user->isNot($model);
     }
+
+    /**
+     * Determine whether the user can export the users report.
+     */
+    public function export(User $user): bool
+    {
+        return $user->hasRole('admin');
+    }
 }

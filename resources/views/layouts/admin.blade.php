@@ -2,6 +2,11 @@
     'title' => null,
 ])
 
+@php
+    $latestUnread = auth()->user()->unreadNotifications()->take(5)->get();
+    $unreadCount = auth()->user()->unreadNotifications()->count();
+@endphp
+
 <x-layouts::dashboard :title="$title ?? __('Dashboard')" :subtitle="__('Administration')" :dark="true">
     <x-slot:brandBadge>
         <span class="ml-auto inline-flex items-center rounded-full bg-brand-500/20 px-2 py-0.5 text-[11px] font-semibold text-brand-300">{{ __('Administration') }}</span>
@@ -69,19 +74,28 @@
             <summary class="flex h-9 w-9 list-none items-center justify-center rounded-lg text-stone-600 hover:bg-stone-100 [&::-webkit-details-marker]:hidden">
                             <span class="relative">
                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-                                <span class="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-red-500"></span>
+                                @if ($unreadCount > 0)
+                                    <span class="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">{{ $unreadCount }}</span>
+                                @endif
                             </span>
             </summary>
             <div class="absolute right-0 z-20 mt-2 w-72 rounded-xl border border-stone-200 bg-white p-2 shadow-lg">
                 <p class="px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-stone-400">{{ __('Notifications') }}</p>
-                <a href="#" class="flex items-start gap-3 rounded-lg px-2 py-2 hover:bg-stone-50">
-                    <span class="mt-1 h-2 w-2 flex-none rounded-full bg-brand-600"></span>
-                    <span><span class="block text-sm text-stone-800">{{ __(':count new users registered', ['count' => 3]) }}</span><span class="block text-xs text-stone-500">{{ __('Today') }}</span></span>
-                </a>
-                <a href="#" class="flex items-start gap-3 rounded-lg px-2 py-2 hover:bg-stone-50">
-                    <span class="mt-1 h-2 w-2 flex-none rounded-full bg-stone-300"></span>
-                    <span><span class="block text-sm text-stone-800">{{ __('Species catalogue updated') }}</span><span class="block text-xs text-stone-500">{{ __('Yesterday') }}</span></span>
-                </a>
+                @forelse ($latestUnread as $notification)
+                    @if ($notification->type === App\Notifications\UsersReportReady::class)
+                        <a href="{{ route('admin.reports.download', $notification->id) }}" class="flex items-start gap-3 rounded-lg px-2 py-2 hover:bg-stone-50">
+                            <span class="mt-1 h-2 w-2 flex-none rounded-full bg-brand-600"></span>
+                            <span><span class="block text-sm text-stone-800">{{ __('Users report ready') }}</span><span class="block text-xs text-stone-500">{{ $notification->created_at?->diffForHumans() }}</span></span>
+                        </a>
+                    @else
+                        <div class="flex items-start gap-3 rounded-lg px-2 py-2">
+                            <span class="mt-1 h-2 w-2 flex-none rounded-full bg-brand-600"></span>
+                            <span class="min-w-0"><span class="block truncate text-sm text-stone-800">{{ $notification->data['subject'] ?? '' }}</span><span class="block text-xs text-stone-500">{{ $notification->created_at?->diffForHumans() }}</span></span>
+                        </div>
+                    @endif
+                @empty
+                    <p class="px-2 py-3 text-sm text-stone-500">{{ __('No notifications') }}</p>
+                @endforelse
             </div>
         </details>
 
