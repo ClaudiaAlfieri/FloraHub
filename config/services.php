@@ -28,6 +28,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'gbif' => [
+        'base_url' => env('GBIF_BASE_URL', 'https://api.gbif.org/v1'),
+        'timeout' => (int) env('GBIF_TIMEOUT', 5),
+        'cache_ttl' => (int) env('GBIF_CACHE_TTL', 60 * 60 * 24),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

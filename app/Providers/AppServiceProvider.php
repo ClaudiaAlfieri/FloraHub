@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\Gbif\GbifClient;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(GbifClient::class, fn (): GbifClient => new GbifClient(
+            baseUrl: (string) config('services.gbif.base_url'),
+            timeout: (int) config('services.gbif.timeout'),
+            cacheTtl: (int) config('services.gbif.cache_ttl'),
+        ));
     }
 
     /**
